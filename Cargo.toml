@@ -5,11 +5,11 @@ keywords = ["x264", "encoding", "h264", "video", "encoder"]
 repository = "https://github.com/quadrupleslap/x264"
 documentation = "https://docs.rs/x264"
 license = "MIT"
-version = "0.7.0"
+version = "0.7.1"
 authors = ["Ram <quadrupleslap@gmail.com>"]
 
 [dependencies]
-x264-sys = { git = "https://github.com/lcxl/x264-rs.git", tag = "v0.3.1" }
+x264-sys = { git = "https://github.com/lcxl/x264-rs.git", tag = "v0.3.2" }
 
 [build-dependencies]
 pkg-config = "0.3"

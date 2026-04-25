@@ -94,6 +94,15 @@ impl Setup {
         self
     }
 
+    /// Sets the maximum interval between IDR keyframes (GOP size).
+    ///
+    /// A value of 0 keeps the default (auto). For low-latency remote desktop use
+    /// cases a value around 30-60 ensures fast recovery after packet loss.
+    pub fn keyint(mut self, max: u32) -> Self {
+        self.raw.i_keyint_max = max as i32;
+        self
+    }
+
     /// Enable constant quality (CRF) mode
     /// value range is usually 0-51, 0 is lossless, 23 is default, 18-22 is visually lossless
     pub fn crf(mut self, value: f32) -> Self {

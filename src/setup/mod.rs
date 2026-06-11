@@ -113,6 +113,23 @@ impl Setup {
         self
     }
 
+    /// Constrains the peak bitrate with VBV (Video Buffering Verifier).
+    ///
+    /// `max_kbps` caps the instantaneous bitrate (kbit/s) and
+    /// `buffer_kbit` sets the VBV buffer size (kbit). Combine with
+    /// `crf()` for constrained-quality encoding: quality-driven in the
+    /// steady state, rate-capped under motion.
+    ///
+    /// VBV must be enabled here, at build time, for
+    /// `Encoder::reconfig_vbv` to work later — x264 cannot turn VBV on
+    /// through `x264_encoder_reconfig` at runtime, it can only adjust
+    /// the values of an already-enabled VBV.
+    pub fn vbv(mut self, max_kbps: i32, buffer_kbit: i32) -> Self {
+        self.raw.rc.i_vbv_max_bitrate = max_kbps;
+        self.raw.rc.i_vbv_buffer_size = buffer_kbit;
+        self
+    }
+
     /// Build the encoder.
     pub fn build<C>(mut self, csp: C, width: i32, height: i32) -> Result<Encoder>
     where

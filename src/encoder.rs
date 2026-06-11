@@ -113,6 +113,26 @@ impl Encoder {
         Flush { encoder: self }
     }
 
+    /// Updates the VBV rate cap at runtime without rebuilding the encoder.
+    ///
+    /// Only the `vbv-maxrate` / `vbv-bufsize` values are changed (both
+    /// in kbit); the rate-control method itself is untouched. VBV must
+    /// already have been enabled when the encoder was built (see
+    /// `Setup::vbv`) — x264 can only adjust an enabled VBV through
+    /// `x264_encoder_reconfig`, not turn it on.
+    pub fn reconfig_vbv(&mut self, max_kbps: i32, buffer_kbit: i32) -> Result<()> {
+        self.params.rc.i_vbv_max_bitrate = max_kbps;
+        self.params.rc.i_vbv_buffer_size = buffer_kbit;
+
+        let err = unsafe { x264_encoder_reconfig(self.raw, &mut self.params) };
+
+        if err < 0 {
+            Err(Error)
+        } else {
+            Ok(())
+        }
+    }
+
     /// The width required of any input images.
     pub fn width(&self) -> i32 { self.params.i_width }
     /// The height required of any input images.
